@@ -1,7 +1,8 @@
 import streamlit as st
-import frontend
-import analytics
-import emailer
+from src import frontend
+from src import analytics
+from src import emailer
+
 
 # 1. Draw the UI and collect the inputs
 user_email, uploaded_files, clicked = frontend.render_ui()
