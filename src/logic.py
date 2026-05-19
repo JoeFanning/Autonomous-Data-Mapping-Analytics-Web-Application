@@ -2,8 +2,8 @@ import pandas as pd
 import streamlit as st
 
 
-@st.cache_data(show_spinner="Combining and formatting files...")
-def load_and_combine_data(files) -> pd.DataFrame:
+@st.cache_data(show_spinner="Combining and formatting **Excel** and **CSV** files...")
+def merge_and_load_spreadsheets(files) -> pd.DataFrame:
     """
     Parses uploaded CSV or Excel files and merges them into a single DataFrame.
     Optimized with st.cache_data to prevent repetitive disk reads.

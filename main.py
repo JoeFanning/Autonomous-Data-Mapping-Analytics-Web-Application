@@ -15,7 +15,7 @@ if uploaded_files:
 
     try:
         # Offload file parsing and concatenation to the logic module
-        final_df = logic.load_and_combine_data(uploaded_files)
+        final_df = logic.merge_and_load_spreadsheets(uploaded_files)
         st.success(f"Successfully loaded {len(uploaded_files)} files!")
 
         st.subheader("Map Your Data Columns")
