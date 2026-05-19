@@ -13,23 +13,22 @@ if clicked:
     elif not uploaded_files:
         st.error("Please upload at least one CSV or Excel file.")
     else:
-        with st.spinner("Processing files and sending email..."):
+        with st.spinner("Processing files and transmitting email via Resend..."):
             try:
                 # 3. Pass data to the Backend Logic module
                 results = analytics.process_and_combine_files(uploaded_files)
                 
-                # 4. Fetch safe app secrets
-                gmail_user = st.secrets["EMAIL_USER"]
-                gmail_pass = st.secrets["EMAIL_PASSWORD"]
+                # 4. Fetch safe app secrets (Resend Key)
+                resend_api_key = st.secrets["RESEND_API_KEY"]
                 
-                # 5. Pass data to the Emailer module
-                emailer.send_report_email(user_email, gmail_user, gmail_pass, results)
+                # 5. Pass data to the Resend Emailer module
+                emailer.send_report_email(user_email, resend_api_key, results)
                 
                 # 6. Notify user of success
-                st.success(f"🎉 Success! The report has been sent to {user_email}.")
+                st.success(f"🎉 Success! The report has been sent to {user_email} via Resend.")
                 st.write("### Preview of Your Combined Data Summary:")
                 st.text(results['summary_stats'])
                 
             except Exception as e:
-                st.error(f"Something went wrong: {e}")
+                st.error(f"Something went wrong during execution: {e}")
 
