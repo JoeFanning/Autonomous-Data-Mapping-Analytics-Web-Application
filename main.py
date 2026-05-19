@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 # Load local .env file if it exists
 load_dotenv()
 
-# This will now successfully fetch your key from the environment
+# Fetch your key from the environment
 resend_key = os.environ.get("RESEND_API_KEY")
 
 if not resend_key:
