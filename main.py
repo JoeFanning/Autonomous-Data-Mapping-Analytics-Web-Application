@@ -1,46 +1,58 @@
 import streamlit as st
-from src import frontend
+import pandas as pd
 from src import logic
 from src import mailer
-import os
-import streamlit as st
-from dotenv import load_dotenv
 
-# Load local .env file if it exists
-load_dotenv()
+# Setup layout
+st.set_page_config(page_title="Data Analytics Web App", page_icon="📊")
+st.title("📊 Data Analytics Web App")
+st.write("Upload your Excel or CSV files. We will combine them, run analytics, and email you the report!")
 
-# Fetch your key from the environment
-resend_key = os.environ.get("RESEND_API_KEY")
+# Inputs
+email = st.text_input("📬 Enter your email address:", placeholder="your-email@example.com")
+uploaded_files = st.file_uploader("📁 Upload spreadsheets:", type=["csv", "xlsx"], accept_multiple_files=True)
 
-if not resend_key:
-    st.error("API Key not found!")
+if uploaded_files:
+    combined_list = []
+    file_names = [f.name for f in uploaded_files]
 
-# 1. Draw the UI and collect the inputs
-user_email, uploaded_files, clicked = frontend.render_ui()
+    for file in uploaded_files:
+        df = pd.read_csv(file) if file.name.endswith('.csv') else pd.read_excel(file)
+        combined_list.append(df)
 
-# 2. Watch for the button click event
-if clicked:
-    if not user_email:
-        st.error("Please enter a valid email address first.")
-    elif not uploaded_files:
-        st.error("Please upload at least one CSV or Excel file.")
-    else:
-        with st.spinner("Processing files and transmitting email via Resend..."):
-            try:
-                # 3. Pass data to the Backend Logic module
-                results = logic.process_and_combine_files(uploaded_files)
-                
-                # 4. Fetch safe app secrets (Resend Key)
-                resend_api_key = st.secrets["RESEND_API_KEY"]
-                
-                # 5. Pass data to the Resend Emailer module
-                mailer.send_report_email(user_email, resend_api_key, results)
-                
-                # 6. Notify user of success
-                st.success(f"🎉 Success! The report has been sent to {user_email} via Resend.")
-                st.write("### Preview of Your Combined Data Summary:")
-                st.text(results['summary_stats'])
-                
-            except Exception as e:
-                st.error(f"Something went wrong during execution: {e}")
+    final_df = pd.concat(combined_list, ignore_index=True)
+    st.success(f"Successfully loaded {len(uploaded_files)} files!")
 
+    st.subheader("Map Your Data Columns")
+    sales_column = st.selectbox("Select your Sales/Revenue column:", final_df.columns)
+
+    if sales_column:
+        st.subheader("📈 Quick Analytics Summary")
+
+        try:
+            # Execute logic module
+            results = logic.process_analytics(final_df, sales_column)
+
+            st.metric(label="Total Sales Across Combined Files", value=f"${results['total_sales']:,.2f}")
+            st.write("Combined Data Preview:", final_df.head())
+
+            # Action execution
+            st.subheader("📬 Send Report")
+            if not email:
+                st.warning("Please enter an email address above to unlock submission.")
+            else:
+                if st.button("📨 Process & Email Report"):
+                    with st.spinner("Sending email..."):
+                        # Execute mailer module
+                        mailer.send_summary_email(
+                            recipient_email=email,
+                            total_sales=results['total_sales'],
+                            column_name=sales_column,
+                            file_names=file_names
+                        )
+                        st.success(f"🚀 Success! Report emailed cleanly to **{email}**.")
+
+        except ValueError as val_err:
+            st.error(f"❌ Data Error: {val_err}")
+        except Exception as e:
+            st.error(f"⚠️ App Encountered an Error: {e}")

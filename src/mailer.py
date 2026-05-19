@@ -1,42 +1,31 @@
-import base64
-import os
 import resend
+import streamlit as st
 
-def send_report_email(recipient_email, api_key, metrics):
-    """Formats and sends the analytics report using Resend SDK."""
-    
-    # 1. Initialize the official Resend client
-    resend.api_key = api_key
 
-    # 2. Build the email body text
-    body_text = f"""
-    Hello,
+def send_summary_email(recipient_email, total_sales, column_name, file_names):
+    """
+    Authenticates with Streamlit secrets and dispatches reports via Resend.
+    """
+    if "RESEND_API_KEY" not in st.secrets:
+        raise RuntimeError("Missing 'RESEND_API_KEY' inside secrets configuration.")
 
-    Your automated data analytics report is ready!
+    resend.api_key = st.secrets["RESEND_API_KEY"]
 
-    --- SUMMARY INFO ---
-    * Total files combined: {metrics['total_files']}
-    * Total rows processed: {metrics['total_rows']}
-    * Total columns found: {metrics['total_columns']}
-
-    --- NUMERICAL DATA STATS ---
-    {metrics['summary_stats']}
-
-    Thank you for using the Data Analytics Web App!
+    html_content = f"""
+    <h2>Your Combined Data Analytics Report is Ready!</h2>
+    <p><strong>Processed Files:</strong> {', '.join(file_names)}</p>
+    <hr />
+    <p><strong>Selected Revenue Column:</strong> {column_name}</p>
+    <p style="font-size: 18px; color: #2e7d32;">
+        <strong>Total Combined Sales:</strong> ${total_sales:,.2f}
+    </p>
+    <hr />
+    <p><small>Generated automatically by your Data Analytics Web App.</small></p>
     """
 
-    # 3. Convert plaintext formatting to HTML for Resend
-    html_body = f"<div style='font-family: Arial, sans-serif; white-space: pre-wrap;'>{body_text}</div>"
-
-    # 4. Construct the Resend payload
-    email_params = {
-        "from": "Automation Engine <onboarding@resend.dev>",
-        "to": [recipient_email],
-        "subject": "📊 Your Automated Data Analytics Report",
-        "html": html_body
-    }
-
-    # 5. Transmit the email via Resend Cloud
-    # (Note: If you want to attach the combined file, we can add that next!)
-    email_response = resend.Emails.send(email_params)
-    return email_response
+    return resend.Emails.send({
+        "from": "onboarding@resend.dev",
+        "to": recipient_email,
+        "subject": "📊 Your Combined Data Analytics Summary",
+        "html": html_content
+    })
