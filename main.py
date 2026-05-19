@@ -2,7 +2,18 @@ import streamlit as st
 from src import frontend
 from src import logic
 from src import mailer
+import os
+import streamlit as st
+from dotenv import load_dotenv
 
+# Load local .env file if it exists
+load_dotenv()
+
+# This will now successfully fetch your key from the environment
+resend_key = os.environ.get("RESEND_API_KEY")
+
+if not resend_key:
+    st.error("API Key not found!")
 
 # 1. Draw the UI and collect the inputs
 user_email, uploaded_files, clicked = frontend.render_ui()
