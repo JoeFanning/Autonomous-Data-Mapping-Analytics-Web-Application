@@ -1,49 +1,46 @@
 import streamlit as st
 import pandas as pd
+from src import frontend
 from src import logic
 from src import mailer
 
-# Setup layout
-st.set_page_config(page_title="Data Analytics Web App", page_icon="📊")
-st.title("📊 Data Analytics Web App")
-st.write("Upload your Excel or CSV files. We will combine them, run analytics, and email you the report!")
+# ALWAYS FIRST: Setup page configuration at the root level
+st.set_page_config(page_title="Enix Data Analytics", page_icon="📊")
 
-# Inputs
-email = st.text_input("📬 Enter your email address:", placeholder="your-email@example.com")
-uploaded_files = st.file_uploader("📁 Upload spreadsheets:", type=["csv", "xlsx"], accept_multiple_files=True)
+# Render UI elements from the src/frontend module
+email, uploaded_files, submit_button = frontend.render_ui()
 
 if uploaded_files:
-    combined_list = []
     file_names = [f.name for f in uploaded_files]
 
-    for file in uploaded_files:
-        df = pd.read_csv(file) if file.name.endswith('.csv') else pd.read_excel(file)
-        combined_list.append(df)
+    try:
+        # Offload file parsing and concatenation to the logic module
+        final_df = logic.load_and_combine_data(uploaded_files)
+        st.success(f"Successfully loaded {len(uploaded_files)} files!")
 
-    final_df = pd.concat(combined_list, ignore_index=True)
-    st.success(f"Successfully loaded {len(uploaded_files)} files!")
+        st.subheader("Map Your Data Columns")
+        sales_column = st.selectbox("Select your Sales/Revenue column:", final_df.columns)
 
-    st.subheader("Map Your Data Columns")
-    sales_column = st.selectbox("Select your Sales/Revenue column:", final_df.columns)
+        if sales_column:
+            st.subheader("📈 Quick Analytics Summary")
 
-    if sales_column:
-        st.subheader("📈 Quick Analytics Summary")
-
-        try:
-            # Execute logic module
+            # Offload metrics calculation to the logic module
             results = logic.process_analytics(final_df, sales_column)
 
-            st.metric(label="Total Sales Across Combined Files", value=f"${results['total_sales']:,.2f}")
+            # Display UI metrics
+            col1, col2, col3 = st.columns(3)
+            col1.metric(label="Total Sales", value=f"${results['total_sales']:,.2f}")
+            col2.metric(label="Average Sales", value=f"${results['average_sales']:,.2f}")
+            col3.metric(label="Transaction Count", value=f"{results['transaction_count']:,}")
+
             st.write("Combined Data Preview:", final_df.head())
 
-            # Action execution
-            st.subheader("📬 Send Report")
-            if not email:
-                st.warning("Please enter an email address above to unlock submission.")
-            else:
-                if st.button("📨 Process & Email Report"):
+            # Trigger notification workflow
+            if submit_button:
+                if not email:
+                    st.warning("Please enter an email address to receive the report.")
+                else:
                     with st.spinner("Sending email..."):
-                        # Execute mailer module
                         mailer.send_summary_email(
                             recipient_email=email,
                             total_sales=results['total_sales'],
@@ -52,7 +49,7 @@ if uploaded_files:
                         )
                         st.success(f"🚀 Success! Report emailed cleanly to **{email}**.")
 
-        except ValueError as val_err:
-            st.error(f"❌ Data Error: {val_err}")
-        except Exception as e:
-            st.error(f"⚠️ App Encountered an Error: {e}")
+    except ValueError as val_err:
+        st.error(f"❌ Data Error: {val_err}")
+    except Exception as e:
+        st.error(f"⚠️ App Encountered an Error: {e}")
