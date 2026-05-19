@@ -1,7 +1,7 @@
 import streamlit as st
 from src import frontend
-from src import analytics
-from src import emailer
+from src import logic
+from src import mailer
 
 
 # 1. Draw the UI and collect the inputs
