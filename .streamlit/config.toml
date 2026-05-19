@@ -1,0 +1,7 @@
+[server]
+# Allows large files to bypass network proxy timeouts
+maxUploadSize = 50
+
+# Disables aggressive token handshakes that fail over unstable mobile signals
+enableCORS = false
+enableXsrfProtection = false
