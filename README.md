@@ -1,6 +1,6 @@
 # 📊 Enix Data Analytics Web App
 
-A clean, interactive data analytics platform built with Streamlit. Upload your business spreadsheets, instantly preview key financial metrics, and automatically dispatch summary reports via email.
+A easy to use, interactive data analytics platform built with Streamlit. Upload your business spreadsheets, instantly preview key financial metrics, and automatically dispatch summary reports via email.
 
 ## 🚀 Live Application
 You can access and interact with the live dashboard directly in your web browser:
