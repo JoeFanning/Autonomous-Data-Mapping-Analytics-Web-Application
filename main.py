@@ -1,79 +1,60 @@
 import streamlit as st
-import pandas as pd
 
-# Import structural components from your three project layers
-from src.frontend import render_ui, target_price_column_only
-from src.logic import merge_and_load_spreadsheets, process_analytics
-from src.mailer import send_summary_email
+# Explicitly route imports into your 'src' directory structure
+from src import frontend  # Owns the UI Look
+from src import logic  # Owns the ML & Math Data Brain
+from src import mailer  # Owns the Email Dispatch Delivery
+
+# 1. Run the base web UI interface setup tools
+uploaded_files, user_email, submit_clicked = frontend.render_base_uploader_ui()
+
+if uploaded_files:
+
+    # Caching helper layer sits safely inside control loop routing parameters
+    @st.cache_data(show_spinner="Combining and loading dataset structures...")
+    def process_raw_files(files):
+        return logic.merge_and_load_spreadsheets(files)
 
 
-def main():
-    # 1. Page Configuration
-    st.set_page_config(page_title="Enix Data Analytics", layout="wide")
+    df = process_raw_files(uploaded_files)
 
-    # 2. State Maintenance
-    if "combined_df" not in st.session_state:
-        st.session_state.combined_df = None
+    # Clean file pointers immediately after memory conversion pipeline routines
+    for f in uploaded_files:
+        f.seek(0)
 
-    # 3. Component Rendering (frontend.py)
-    email, uploaded_files, submit_clicked = render_ui(df=st.session_state.combined_df)
+    if not df.empty:
+        # Determine internal pandas core structural components
+        numeric_cols = df.select_dtypes(include=["number"]).columns.tolist()
+        text_cols = df.select_dtypes(include=["object", "category"]).columns.tolist()
 
-    # 4. Pipeline Syncing Engine (logic.py)
-    if uploaded_files:
-        try:
-            merged_df = merge_and_load_spreadsheets(uploaded_files)
+        # Route numeric attributes downstream into backend ML Naive Bayes classifier
+        detected_price_col = logic.target_price_column_only(numeric_cols)
 
-            for f in uploaded_files:
-                f.seek(0)
+        # Tell the UI to render tabs, receiving selected columns back
+        chosen_num, chosen_text = frontend.render_data_tabs_layout(
+            numeric_cols, text_cols, detected_price_col
+        )
 
-            if st.session_state.combined_df is None or not st.session_state.combined_df.equals(merged_df):
-                st.session_state.combined_df = merged_df
-                st.rerun()
+        # Coordinate data operations based on user selection
+        if chosen_num:
+            calculated_metrics = logic.process_analytics(df, chosen_num)
+            frontend.display_numeric_dashboard(calculated_metrics, chosen_num)
 
-        except Exception as e:
-            st.error(f"Error compiling spreadsheet datasets: {e}")
+        if chosen_text:
+            text_distribution_df = logic.calculate_text_distribution(df, chosen_text)
+            frontend.display_text_table(text_distribution_df)
+
+        # Trigger email automation routines when submit action requirements are confirmed
+        if submit_clicked and user_email:
+            # Consolidate latest calculations state packet values safely
+            fallback_col = chosen_num if chosen_num else (numeric_cols[0] if numeric_cols else None)
+
+            if fallback_col:
+                final_report_data = logic.process_analytics(df, fallback_col)
+                mailer.dispatch_analytics_report(user_email, final_report_data)
+                st.success(f"📬 Analytical report has been queued for transmission to: {user_email}")
+            else:
+                st.error("Cannot dispatch email report: No valid numeric column exists to calculate metrics.")
 
     else:
-        st.session_state.combined_df = None
-
-    # 5. Report Dispatch Engine (mailer.py)
-    if submit_clicked:
-        if not email:
-            st.error("⚠️ Please enter a valid recipient email address first.")
-        elif not uploaded_files or st.session_state.combined_df is None:
-            st.error("⚠️ Please upload your analytics spreadsheet source files first.")
-        else:
-            with st.spinner("Calculating dataset matrices and dispatching email report..."):
-                df = st.session_state.combined_df
-                numeric_cols = df.select_dtypes(include=["number"]).columns.tolist()
-
-                detected_price_col = target_price_column_only(numeric_cols)
-
-                if detected_price_col:
-                    try:
-                        metrics_data = process_analytics(df, detected_price_col)
-                        total_sales = metrics_data["total_sales"]
-                        file_names = [f.name for f in uploaded_files]
-
-                        send_summary_email(
-                            recipient_email=email,
-                            total_sales=total_sales,
-                            column_name=detected_price_col,
-                            file_names=file_names
-                        )
-
-                        st.success(f"🎉 Success! Analytical summary report successfully dispatched to {email}")
-
-                    except RuntimeError as e:
-                        st.error(f"Configuration Error: {e}")
-                        st.info(
-                            "💡 Please specify a `RESEND_API_KEY` token inside your `.streamlit/secrets.toml` parameters.")
-                    except Exception as e:
-                        st.error(f"Email Dispatch Failure: {e}")
-                else:
-                    st.error(
-                        "❌ Aborted: Could not find any valid financial target metrics inside the uploaded file columns.")
-
-
-if __name__ == "__main__":
-    main()
+        frontend.display_empty_warning()
