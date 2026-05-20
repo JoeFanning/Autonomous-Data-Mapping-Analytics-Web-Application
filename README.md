@@ -4,7 +4,7 @@ A easy to use, interactive data analytics platform built with Streamlit. Upload 
 
 ## 🚀 Live Application
 You can access and interact with the live dashboard directly in your web browser:
-👉 **[Launch Enix Data Analytics App](https://streamlit.io)** *(Note: Replace this placeholder link with your actual deployed Streamlit URL)*
+👉 **[Launch Enix Data Analytics App](https://streamlit.io](https://joefanningdataanalytics.streamlit.app/)** 
 
 ---
 
