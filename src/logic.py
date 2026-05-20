@@ -156,9 +156,9 @@ if uploaded_files:
 
 
 def process_analytics(df, column):
-    """Calculates price metrics for a chosen numeric column.
-
-    Safely handles missing data.
+    """
+    Calculates comprehensive metrics for a chosen numeric column.
+    Provides both new price metrics and legacy keys to prevent engine errors.
     """
     clean_series = df[column].dropna()
 
@@ -167,12 +167,21 @@ def process_analytics(df, column):
             "highest_price": 0.0,
             "lowest_price": 0.0,
             "average_price": 0.0,
-            "standard_deviation": 0.0
+            "standard_deviation": 0.0,
+            # Legacy metric fallback strings to keep main.py happy
+            "total_sales": 0.0,
+            "average_sales": 0.0,
+            "transaction_count": 0
         }
 
     return {
         "highest_price": float(clean_series.max()),
         "lowest_price": float(clean_series.min()),
         "average_price": float(clean_series.mean()),
-        "standard_deviation": float(clean_series.std()) if len(clean_series) > 1 else 0.0
+        "standard_deviation": float(clean_series.std()) if len(clean_series) > 1 else 0.0,
+        # Legacy mappings: mapping sum/mean/count to keep background tasks alive
+        "total_sales": float(clean_series.sum()),
+        "average_sales": float(clean_series.mean()),
+        "transaction_count": int(clean_series.count())
     }
+
