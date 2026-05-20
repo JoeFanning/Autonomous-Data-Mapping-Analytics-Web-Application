@@ -2,6 +2,28 @@
 
 An easy to use, interactive data analytics platform built with Streamlit. Upload your business spreadsheets, instantly preview key financial metrics, and automatically dispatch summary reports via email.
 
+## 🧠 My Interest in Data Drift
+
+"I am very interested by how data changes over time and how software reacts to those unexpected changes. In the real world, data is rarely perfect or consistent, software must learn to adapt to these shifts rather than crashing. This curiosity is what led me to explore the concept of **Data Drift**."
+
+---
+
+## 🌊 What is Data Drift?
+
+Data Drift happens when the structure or properties of your data change over time. A common type is **Schema Drift**, which occurs when file headers or column names suddenly change. 
+
+For example, if a program expects an Excel column to be named exactly **"Price"**, but a user or an automated system updates the file and names it **"Unit Cost"**, **"Rate"**, or **"MSRP"**, a traditional pipeline will get confused and completely crash. 
+
+---
+
+## 🛠️ My Simple Solution for Changing Price Columns
+
+To tackle this problem, I built this project as a simple solution to handle shifting column names. 
+
+Instead of forcing the spreadsheet to have one fixed name, my application uses a smart keyword scanning engine. Whether your incoming file calls the column `Price`, `unitcost`, `Rate`, `MSRP`, or even `Precio`, the code dynamically catches that change. It automatically locks onto the correct column and calculates your metrics smoothly without ever breaking the system.
+
+
+
 ## 🚀 Live Application
 You can access and interact with the live dashboard directly in your web browser:
 👉 **[Launch Enix Data Analytics App](https://streamlit.io](https://joefanningdataanalytics.streamlit.app/)** 
