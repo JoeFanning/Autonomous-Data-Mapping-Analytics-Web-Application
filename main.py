@@ -26,7 +26,7 @@ if uploaded_files:
         numeric_columns = numeric_df.columns.tolist()
 
         if not numeric_columns:
-            st.error("❌ No numeric columns were detected in your uploaded files.")
+            st.error("❌ Please upload a spreadsheet with prices(numbers). You have no numbers in your spreadsheet for calculations")
         else:
             # Pass only the filtered numeric column names to the selectbox
             sales_column = st.selectbox("Select your Sales/Revenue column:", numeric_columns)
