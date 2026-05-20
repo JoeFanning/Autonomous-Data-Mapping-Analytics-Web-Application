@@ -156,22 +156,13 @@ if uploaded_files:
 
 
 def process_analytics(df, column):
-    """
-    Calculates comprehensive metrics for a chosen numeric column.
-    Provides both new price metrics and legacy keys to prevent engine errors.
-    """
     clean_series = df[column].dropna()
 
     if clean_series.empty:
         return {
-            "highest_price": 0.0,
-            "lowest_price": 0.0,
-            "average_price": 0.0,
-            "standard_deviation": 0.0,
-            # Legacy metric fallback strings to keep main.py happy
-            "total_sales": 0.0,
-            "average_sales": 0.0,
-            "transaction_count": 0
+            "highest_price": 0.0, "lowest_price": 0.0, "average_price": 0.0, "standard_deviation": 0.0,
+            "total_sales": 0.0, "transaction_count": 0, "median_price": 0.0, "price_range": 0.0,
+            "q1_price": 0.0, "q3_price": 0.0
         }
 
     return {
@@ -179,9 +170,10 @@ def process_analytics(df, column):
         "lowest_price": float(clean_series.min()),
         "average_price": float(clean_series.mean()),
         "standard_deviation": float(clean_series.std()) if len(clean_series) > 1 else 0.0,
-        # Legacy mappings: mapping sum/mean/count to keep background tasks alive
         "total_sales": float(clean_series.sum()),
-        "average_sales": float(clean_series.mean()),
-        "transaction_count": int(clean_series.count())
+        "transaction_count": int(clean_series.count()),
+        "median_price": float(clean_series.median()),
+        "price_range": float(clean_series.max() - clean_series.min()),
+        "q1_price": float(clean_series.quantile(0.25)),
+        "q3_price": float(clean_series.quantile(0.75))
     }
-

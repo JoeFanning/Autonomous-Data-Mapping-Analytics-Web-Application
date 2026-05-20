@@ -88,19 +88,39 @@ def render_ui(df: pd.DataFrame = None):
                 clean_series = df[detected_price_col].dropna()
 
                 if not clean_series.empty:
+                    # Core math calculations
                     highest_val = float(clean_series.max())
                     lowest_val = float(clean_series.min())
                     avg_val = float(clean_series.mean())
                     std_val = float(clean_series.std()) if len(clean_series) > 1 else 0.0
 
-                    # Grid UI layout display
+                    # New calculated metrics
+                    median_val = float(clean_series.median())
+                    range_spread = highest_val - lowest_val
+                    total_sum = float(clean_series.sum())
+                    record_count = int(clean_series.count())
+
+                    # Expanded 4-Row Grid UI Layout Display
                     row1_col1, row1_col2 = st.columns(2)
                     row2_col1, row2_col2 = st.columns(2)
+                    row3_col1, row3_col2 = st.columns(2)
+                    row4_col1, row4_col2 = st.columns(2)
 
+                    # Row 1: Highs and Lows
                     row1_col1.metric(label="Highest Price Found", value=f"${highest_val:,.2f}")
                     row1_col2.metric(label="Lowest Price Found", value=f"${lowest_val:,.2f}")
-                    row2_col1.metric(label="Average Price", value=f"${avg_val:,.2f}")
-                    row2_col2.metric(label="Standard Deviation", value=f"{std_val:,.2f}")
+
+                    # Row 2: Central Tendencies (Averages)
+                    row2_col1.metric(label="Average Price (Mean)", value=f"${avg_val:,.2f}")
+                    row2_col2.metric(label="Median Price (Middle Point)", value=f"${median_val:,.2f}")
+
+                    # Row 3: Data Variance (Spread)
+                    row3_col1.metric(label="Price Range Spread", value=f"${range_spread:,.2f}")
+                    row3_col2.metric(label="Standard Deviation", value=f"{std_val:,.2f}")
+
+                    # Row 4: Totals and Volume
+                    row4_col1.metric(label="Total Volumetric Sum", value=f"${total_sum:,.2f}")
+                    row4_col2.metric(label="Total Record Count", value=f"{record_count:,}")
                 else:
                     st.warning(f"The column '{detected_price_col}' contains no valid numbers.")
             else:
