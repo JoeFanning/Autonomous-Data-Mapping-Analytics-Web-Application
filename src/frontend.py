@@ -21,29 +21,7 @@ def render_base_uploader_ui():
     return uploaded_files, email, submit_button
 
 
-def render_data_tabs_layout(numeric_cols, text_cols, detected_col_name):
-    """Renders the high-level structural tabs layout selection logic."""
-    tab1, tab2 = st.tabs(["🔢 Numeric Metrics", "🔤 Text Element Counter"])
 
-    selected_num_col = None
-    selected_text_col = None
-
-    with tab1:
-        if numeric_cols:
-            st.subheader("Price Metrics Breakdown")
-            default_idx = numeric_cols.index(detected_col_name) if detected_col_name in numeric_cols else 0
-            selected_num_col = st.selectbox("Select a numeric column:", numeric_cols, index=default_idx)
-        else:
-            st.info("No numeric columns found in this dataset.")
-
-    with tab2:
-        if text_cols:
-            st.subheader("Identical Element Counts")
-            selected_text_col = st.selectbox("Select a text column to isolate elements:", text_cols)
-        else:
-            st.info("No text columns found in this dataset.")
-
-    return selected_num_col, selected_text_col
 
 
 def display_numeric_dashboard(metrics, selected_col):
