@@ -4,3 +4,5 @@ openpyxl
 resend
 matplotlib
 dotenv
+scikit-learn
+numpy
