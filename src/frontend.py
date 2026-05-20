@@ -3,10 +3,19 @@ import streamlit as st
 
 def render_base_uploader_ui():
     """Renders page identity headers and files extraction blocks."""
-    st.title("Unified Data & Text Analyzer")
+    st.title("Autonomous Data Mapping & Analytics")
+    # Use a Markdown header to make the text large and bold
+    st.markdown("### 📁 Upload your Excel (.xlsx) or CSV (.csv) files")
+    st.write("We will combine them, run analytics, and email you the report!")
+
+    # Set label_visibility to "collapsed" to hide the small default label
     uploaded_files = st.file_uploader(
-        "Upload files", type=["csv", "xlsx", "xls", "txt"], accept_multiple_files=True
+        label="Upload Space",
+        label_visibility="collapsed",
+        type=["csv", "xlsx", "xls", "txt"],
+        accept_multiple_files=True
     )
+
     email = st.text_input("📬 Enter your email address:", placeholder="your-email@example.com")
     submit_button = st.button("🚀 Run Analytics & Email Report")
     return uploaded_files, email, submit_button
