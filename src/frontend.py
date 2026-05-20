@@ -109,22 +109,6 @@ def render_ui(df: pd.DataFrame = None):
         else:
             st.info("No numeric columns found in this dataset.")
 
-        # 2. TEXT ELEMENT COUNTER (Kept clean on its own below the metrics)
-        if text_cols:
-            st.divider()
-            st.subheader("🔤 Identical Element Counts")
-            selected_text_col = st.selectbox(
-                "Select a text column to isolate elements:",
-                text_cols,
-                key="frontend_text_select",
-            )
-
-            counts = df[selected_text_col].astype(str).str.strip().value_counts()
-            counts_df = counts.reset_index()
-            counts_df.columns = ["Element Name", "Total Occurrences"]
-
-            st.dataframe(counts_df, use_container_width=True)
-
     elif df is not None and df.empty:
         st.warning("Uploaded files do not contain usable data.")
 
