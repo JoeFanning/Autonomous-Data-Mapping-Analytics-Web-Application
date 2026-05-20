@@ -26,7 +26,7 @@ Instead of forcing the spreadsheet to have one fixed name, my application uses a
 
 ## 🚀 Live Application
 You can access and interact with the live dashboard directly in your web browser:
-👉 **[Launch Enix Data Analytics App](https://streamlit.io](https://joefanningdataanalytics.streamlit.app/)** 
+👉 **[Launch Enix Data Analytics App](https://joefanningdataanalytics.streamlit.app/)** 
 
 ---
 
