@@ -1,26 +1,35 @@
-# 📊 Enix Data Analytics Web App
+# 🌐 Autonomous Data Mapping & Analytics Web Application
+
 
 An easy to use, interactive data analytics platform built with Streamlit. Upload your business spreadsheets, instantly preview key financial metrics, and automatically dispatch summary reports via email.
 
-## 🧠 My Interest in Data Drift
+## 🧠 The Motivation: Exploring Data Drift
 
-"I am very interested by how data changes over time and how software reacts to those unexpected changes. In the real world, data is rarely perfect or consistent, software must learn to adapt to these shifts rather than crashing. This curiosity is what led me to explore the concept of **Data Drift**."
+"I am very interested by how data changes over time and how software reacts to those unexpected changes. In the real world, data is rarely perfect or consistent; software must learn to adapt to these shifts rather than crashing. This curiosity is what led me to explore the concept of **Data Drift**."
 
 ---
 
 ## 🌊 What is Data Drift?
 
-Data Drift happens when the structure or properties of your data change over time. A common type is **Schema Drift**, which occurs when file headers or column names suddenly change. 
+Data Drift happens when the structure or statistical properties of your data shift over time. A common and frustrating type is **Schema Drift**, which occurs when file headers or column names suddenly change without warning. 
 
-For example, if a program expects an Excel column to be named exactly **"Price"**, but a user or an automated system updates the file and names it **"Unit Cost"**, **"Rate"**, or **"MSRP"**, a traditional pipeline will get confused and completely crash. 
+For example, if a traditional program expects an Excel column to be named exactly `"Price"`, but a user or automated system updates the file and names it `"Unit Cost"`, `"Rate"`, or `"MSRP"`, the pipeline will break and the software will crash.
 
 ---
 
-## 🛠️ My Simple Solution for Changing Price Columns
+## 🛠️ The Solution: Adaptive Pipeline
 
-To tackle this problem, I built this project as a simple solution to handle shifting column names. 
+To tackle this problem, I built this project as a simple but effective solution to handle shifting column names automatically.
 
-Instead of forcing the spreadsheet to have one fixed name, my application uses a smart keyword scanning engine. Whether your incoming file calls the column `Price`, `unitcost`, `Rate`, `MSRP`, or even `Precio`, the code dynamically catches that change. It automatically locks onto the correct column and calculates your metrics smoothly without ever breaking the system.
+### 🤖 Intelligent Column Detection via Naive Bayes
+
+Instead of relying on rigid, error-prone string matching or regular expressions, the engine utilizes a trained **Naive Bayes Machine Learning model** to prevent crashes caused by Schema Drift.
+
+The text classification model processes incoming numeric column headers by analyzing character sequence probabilities against a multi-cased training vocabulary. This allows the system to accurately detect price columns across various layout formats—including lowercase (`price`), UPPERCASE (`PRICE`), and Title Case (`Price`) configurations—and eccentric, multilingual naming variations (such as `MSRP`, `precio unitario`, `prix unitaire`, or `Stückpreis`), ensuring robust performance even with unexpected spreadsheet variations.
+The ultimate 
+### 🔮 The Ultimate Goal: Total Autonomous Data Mapping
+
+Looking ahead, the ultimate achievement for an engineering pipeline like this would be expanding autonomous classification to the entire dataset. Instead of just targeting a single price field, a mature system would evaluate every text and numeric column simultaneously—instantly identifying exactly *what* the column represents, classifying the specific type of data it holds, and dynamically applying the correct analytical process without any human intervention.
 
 
 
