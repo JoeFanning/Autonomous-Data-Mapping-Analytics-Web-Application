@@ -1,12 +1,11 @@
+import re
 import pandas as pd
 import streamlit as st
 
 
 @st.cache_data(show_spinner="Combining **Excel** and **CSV** files...")
 def merge_and_load_spreadsheets(files) -> pd.DataFrame:
-    """
-    Parses files and merges them completely, keeping all raw data types.
-    """
+    """Parses files and merges them completely, keeping all raw data types."""
     combined_list = []
     for file in files:
         if file.name.endswith(".csv"):
@@ -24,13 +23,42 @@ def merge_and_load_spreadsheets(files) -> pd.DataFrame:
     return pd.concat(combined_list, ignore_index=True)
 
 
+def find_default_price_column(numeric_columns):
+    """Matches columns against known price keywords to find a default index."""
+    price_keywords = {
+        "price", "unitprice", "rate", "unitrate", "cost", "unitcost", "u_price",
+        "u.price", "un.price", "unit_prc", "u_prc", "prc", "u_rate", "u.rate",
+        "ucost", "u_cost", "u.cost", "variant price", "variant_price",
+        "regular price", "regular_price", "sale price", "sale_price",
+        "retail price", "retail_price", "msrp", "list price", "list_price",
+        "sell price", "selling price", "wholesale price", "wholesale_price",
+        "purchase price", "purchase_price", "supply cost", "supply_price",
+        "base price", "base_price", "default price", "default_price",
+        "amount per unit", "amount_per_unit", "item price", "item_price",
+        "item cost", "item_cost", "net price", "net_price", "gross price",
+        "gross_price", "price each", "price_each", "price/each", "charge amount",
+        "charge_amount", "unit_amount", "unit amount", "value", "unit value",
+        "unit_value", "precio", "precio unitario", "prix", "prix unitaire",
+        "preis", "stückpreis", "stueckpreis"
+    }
+
+    for index, col in enumerate(numeric_columns):
+        # Sanitize name by making lowercase and removing non-alphanumeric chars
+        sanitized = re.sub(r'[^a-z0-9]', '', col.lower())
+
+        # Check if the sanitized column name matches or contains any target words
+        if any(kw.replace(" ", "").replace("_", "").replace(".", "") in sanitized for kw in price_keywords):
+            return index
+
+    return 0  # Fallback to the first column if no match is found
+
+
 # --- UI Logic ---
 st.title("Unified Data & Text Analyzer")
 
 uploaded_files = st.file_uploader(
     "Upload files", type=["csv", "xlsx", "xls", "txt"], accept_multiple_files=True
 )
-
 
 if uploaded_files:
     # 1. Load the combined dataset
@@ -53,27 +81,46 @@ if uploaded_files:
         # --- TAB 1: NUMERIC METRICS ---
         with tab1:
             if numeric_cols:
-                st.subheader("Column Totals & Averages")
+                st.subheader("Price Metrics Breakdown")
+
+                # Automatically determine the best default column index
+                default_idx = find_default_price_column(numeric_cols)
+
                 selected_num_col = st.selectbox(
-                    "Select a numeric column:", numeric_cols
+                    "Select a numeric column:",
+                    numeric_cols,
+                    index=default_idx
                 )
 
                 # Calculate calculations safely dropping null values
                 clean_series = df[selected_num_col].dropna()
 
                 if not clean_series.empty:
-                    total_val = float(clean_series.sum())
+                    # Calculate required price analytics
+                    highest_val = float(clean_series.max())
+                    lowest_val = float(clean_series.min())
                     avg_val = float(clean_series.mean())
+                    std_val = float(clean_series.std()) if len(clean_series) > 1 else 0.0
 
-                    # Display metrics side-by-side
-                    m_col1, m_col2 = st.columns(2)
-                    m_col1.metric(
-                        label=f"Total of {selected_num_col}",
-                        value=f"{total_val:,.2f}",
+                    # Display metrics side-by-side in a 2x2 grid layout
+                    row1_col1, row1_col2 = st.columns(2)
+                    row2_col1, row2_col2 = st.columns(2)
+
+                    row1_col1.metric(
+                        label=f"Highest Price ({selected_num_col})",
+                        value=f"{highest_val:,.2f}",
                     )
-                    m_col2.metric(
-                        label=f"Average of {selected_num_col}",
+                    row1_col2.metric(
+                        label=f"Lowest Price ({selected_num_col})",
+                        value=f"{lowest_val:,.2f}",
+                    )
+                    row2_col1.metric(
+                        label=f"Average Price ({selected_num_col})",
                         value=f"{avg_val:,.2f}",
+                    )
+                    row2_col2.metric(
+                        label=f"Standard Deviation",
+                        value=f"{std_val:,.2f}",
                     )
                 else:
                     st.warning("The selected column contains no numeric data.")
@@ -89,12 +136,11 @@ if uploaded_files:
                 )
 
                 # Isolate, clean, and count identical string matches
-                # This turns [door, door, window] into a clean counted list
                 counts = (
                     df[selected_text_col]
-                    .astype(str)
-                    .str.strip()
-                    .value_counts()
+                        .astype(str)
+                        .str.strip()
+                        .value_counts()
                 )
 
                 # Format counts into a clean dataframe for presentation
@@ -110,22 +156,23 @@ if uploaded_files:
 
 
 def process_analytics(df, column):
+    """Calculates price metrics for a chosen numeric column.
+
+    Safely handles missing data.
     """
-    Calculates total sales, average sales, and transaction counts
-    for a chosen numeric column. Safely handles missing data.
-    """
-    # Exclude null/missing entries for clean calculations
     clean_series = df[column].dropna()
 
     if clean_series.empty:
         return {
-            "total_sales": 0.0,
-            "average_sales": 0.0,
-            "transaction_count": 0
+            "highest_price": 0.0,
+            "lowest_price": 0.0,
+            "average_price": 0.0,
+            "standard_deviation": 0.0
         }
 
     return {
-        "total_sales": float(clean_series.sum()),
-        "average_sales": float(clean_series.mean()),
-        "transaction_count": int(clean_series.count())
+        "highest_price": float(clean_series.max()),
+        "lowest_price": float(clean_series.min()),
+        "average_price": float(clean_series.mean()),
+        "standard_deviation": float(clean_series.std()) if len(clean_series) > 1 else 0.0
     }
