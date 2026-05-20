@@ -50,3 +50,5 @@ The app automatically scans your dataset columns for financial markers (such as 
 * **Total Volumetric Sum:** The aggregate total financial revenue accumulation calculated across all line items combined.
 * **Total Record Count:** The total number of valid transaction rows currently processed by the dataset engine.
 
+## 📄 License
+This project is open-source software created by **Joe Fanning** and is licensed under the [MIT License](LICENSE).
