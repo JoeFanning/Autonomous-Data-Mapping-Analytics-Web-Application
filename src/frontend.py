@@ -20,10 +20,6 @@ def render_base_uploader_ui():
     submit_button = st.button("🚀 Run Analytics & Email Report")
     return uploaded_files, email, submit_button
 
-
-
-
-
 def display_numeric_dashboard(metrics, selected_col):
     """Draws a balanced 2x2 presentation layout container for metrics numbers."""
     if metrics["transaction_count"] > 0:
