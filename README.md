@@ -26,7 +26,7 @@ To tackle this problem, I built this project as a simple but effective solution 
 Instead of relying on rigid, error-prone string matching or regular expressions, the engine utilizes a trained **Naive Bayes Machine Learning model** to prevent crashes caused by Schema Drift.
 
 The text classification model processes incoming numeric column headers by analyzing character sequence probabilities against a multi-cased training vocabulary. This allows the system to accurately detect price columns across various layout formats—including lowercase (`price`), UPPERCASE (`PRICE`), and Title Case (`Price`) configurations—and eccentric, multilingual naming variations (such as `MSRP`, `precio unitario`, `prix unitaire`, or `Stückpreis`), ensuring robust performance even with unexpected spreadsheet variations.
-The ultimate 
+ 
 ### 🔮 The Ultimate Goal: Total Autonomous Data Mapping
 
 Looking ahead, the ultimate achievement for an engineering pipeline like this would be expanding autonomous classification to the entire dataset. Instead of just targeting a single price field, a mature system would evaluate every text and numeric column simultaneously—instantly identifying exactly *what* the column represents, classifying the specific type of data it holds, and dynamically applying the correct analytical process without any human intervention.
