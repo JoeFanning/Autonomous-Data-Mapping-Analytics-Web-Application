@@ -5,16 +5,34 @@ from sklearn.naive_bayes import MultinomialNB
 
 
 def merge_and_load_spreadsheets(files) -> pd.DataFrame:
-    """Parses raw files and merges them into a single dataframe."""
-    combined_list = []
+    """Safely loads and merges multiple uploaded Excel or CSV files."""
+    all_dataframes = []
+
     for file in files:
-        if file.name.endswith(".csv"):
-            df = pd.read_csv(file)
-        else:
-            df = pd.read_excel(file)
-        df.columns = df.columns.str.strip()
-        combined_list.append(df)
-    return pd.concat(combined_list, ignore_index=True) if combined_list else pd.DataFrame()
+        # Grab the file name to inspect its extension
+        file_name = file.name.lower()
+
+        try:
+            if file_name.endswith('.csv') or file_name.endswith('.txt'):
+                # Read CSV or flat text data layout files safely
+                df = pd.read_csv(file)
+            elif file_name.endswith('.xlsx') or file_name.endswith('.xls'):
+                # Read standard Excel sheets safely
+                df = pd.read_excel(file)
+            else:
+                continue
+
+            all_dataframes.append(df)
+
+        except Exception as e:
+            # Prevent a corrupted single file from crashing the entire user session
+            continue
+
+    if not all_dataframes:
+        return pd.DataFrame()  # Return clean empty dataframe to trigger your guard clauses
+
+    # Combine all individual tables matching layout fields
+    return pd.concat(all_dataframes, ignore_index=True)
 
 
 def target_price_column_only(numeric_columns):
