@@ -25,12 +25,12 @@ def dispatch_analytics_report(recipient_email, analytics_data):
     # Compile a metrics dashboard visualization layout directly inside the email body template
     html_content = f"""
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px;">
-        <h2 style="color: #1e3a8a; border-bottom: 2px solid #1e3a8a; padding-bottom: 10px;">📊 Enix Data Analytics Report</h2>
+        <h2 style="color: #1e3a8a; border-bottom: 2px solid #1e3a8a; padding-bottom: 10px;">📊 Autonomous Data Mapping & Analytics</h2>
         <p>Your requested machine learning data analytics pipeline summary is complete.</p>
 
         <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
         <tr style="background-color: #f8fafc;">
-                <td style="padding: 12px; border: 1px solid #e2e8f0; font-weight: bold;">Highest Value Found:</td>
+                <td style="padding: 12px; border: 1px solid #e2e8f0; font-weight: bold;">Total Revenue:</td>
                 <td style="padding: 12px; border: 1px solid #e2e8f0; color: #10b981; font-weight: bold;">${total_revenue:,.2f}</td>
             </tr>
             <tr style="background-color: #f8fafc;">
@@ -46,7 +46,7 @@ def dispatch_analytics_report(recipient_email, analytics_data):
                 <td style="padding: 12px; border: 1px solid #e2e8f0; font-weight: bold;">${average:,.2f}</td>
             </tr>
             <tr style="background-color: #f8fafc;">
-                <td style="padding: 12px; border: 1px solid #e2e8f0; font-weight: bold;">Highest Value Found:</td>
+                <td style="padding: 12px; border: 1px solid #e2e8f0; font-weight: bold;">Geometric Mean:</td>
                 <td style="padding: 12px; border: 1px solid #e2e8f0; color: #10b981; font-weight: bold;">${geometric_mean:,.2f}</td>
             </tr>
             <tr>
@@ -56,7 +56,7 @@ def dispatch_analytics_report(recipient_email, analytics_data):
         </table>
 
         <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 25px 0;" />
-        <p style="font-size: 12px; color: #94a3b8; text-align: center;">Generated automatically by your Enix Autonomous Data Mapping Pipeline Web Application.</p>
+        <p style="font-size: 12px; color: #94a3b8; text-align: center;">Generated automatically by Autonomous Data Mapping Pipeline Web Application created by Joe Fanning May 2026</p>
     </div>
     """
 
