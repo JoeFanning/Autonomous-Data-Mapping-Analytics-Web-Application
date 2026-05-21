@@ -13,7 +13,7 @@ An easy to use, interactive data analytics platform built with Streamlit. Upload
 
 Data Drift happens when the structure or statistical properties of your data shift over time. A common and frustrating type is **Schema Drift**, which occurs when file headers or column names suddenly change without warning. 
 
-For example, if a traditional program expects an Excel column to be named exactly `"Price"`, but a user or automated system updates the file and names it `"Unit Cost"`, `"Rate"`, or `"MSRP"`, the pipeline will break and the software will crash.
+For example, if a traditional program expects an Excel column to be named exactly `"Total Price", but a user or automated system updates the file column names to `"Total Amount"`, `"Invoice Total"`, or `"Net Cost"`, the pipeline will break and the software will crash.
 
 ---
 
@@ -25,8 +25,7 @@ To tackle this problem, I built this project as a simple but effective solution 
 
 Instead of relying on rigid, error-prone string matching or regular expressions, the engine utilizes a trained **Naive Bayes Machine Learning model** to prevent crashes caused by Schema Drift.
 
-The text classification model processes incoming numeric column headers by analyzing character sequence probabilities against a multi-cased training vocabulary. This allows the system to accurately detect price columns across various layout formats—including lowercase (`price`), UPPERCASE (`PRICE`), and Title Case (`Price`) configurations—and eccentric, multilingual naming variations (such as `MSRP`, `precio unitario`, `prix unitaire`, or `Stückpreis`), ensuring robust performance even with unexpected spreadsheet variations.
-<<<<<<< HEAD
+The text classification model processes incoming numeric column headers by analyzing character sequence probabilities against a multi-cased training vocabulary. This allows the system to accurately detect different column header names for 'Total Price', including different lexical variants such as lowercase (`total price`), UPPERCASE (`TOTAL PRICE`), Title Case (`Total Price`), compound words (TotalPrice), snake_case (total_price) and many other variants. This ensures robust performance even with unexpected spreadsheet variations. This program is currently only adapted to the english language.
  
 =======
 
