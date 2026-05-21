@@ -35,7 +35,7 @@ Looking ahead, the ultimate achievement for an engineering pipeline like this wo
 
 ## 🚀 Live Application
 You can access and interact with the live dashboard directly in your web browser:
-👉 **[Launch Enix Data Analytics App](https://joefanningdataanalytics.streamlit.app/)** 
+👉 **[Launch Autonomous-Data-Mapping-Analytics-Web-Application](https://joefanning.streamlit.app/)** 
 
 ---
 
