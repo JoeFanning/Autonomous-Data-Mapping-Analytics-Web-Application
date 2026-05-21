@@ -19,7 +19,7 @@ def render_base_uploader_ui():
     if submit_button:
         if not email:
             # Stop everything immediately and alert the user right here
-            st.error("⚠️ Please provide a valid email address before running the report.")
+            st.error("⚠️ Please provide aa valid email address before running the report.")
             st.stop()
         else:
             submit_clicked = True
