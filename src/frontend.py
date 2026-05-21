@@ -50,13 +50,15 @@ def display_numeric_dashboard(metrics, selected_col):
         row1_col1, row1_col2 = st.columns(2)
         row2_col1, row2_col2 = st.columns(2)
         row3_col1, row3_col2 = st.columns(2)
+        row4_col1 = st.columns(1)
 
         row1_col1.metric(label=f"Total Revenue ({selected_col})", value=f"${metrics['total_revenue']:,.2f}")
         row1_col2.metric(label=f"Highest Price ({selected_col})", value=f"${metrics['highest_price']:,.2f}")
         row2_col1.metric(label=f"Lowest Price ({selected_col})", value=f"${metrics['lowest_price']:,.2f}")
         row2_col2.metric(label=f"Average Price ({selected_col})", value=f"${metrics['average_price']:,.2f}")
-        row3_col1.metric(label=f"Geometric Mean ({selected_col})", value=f"${metrics['geometric_mean']:,.2f}")
+        row3_col1.metric(label=f"Median ({selected_col})", value=f"${metrics['median']:,.2f}")
         row3_col2.metric(label="Standard Deviation", value=f"{metrics['standard_deviation']:,.2f}")
+        row4_col1.metric(label="Transaction Count", value=f"{metrics['transaction_count']:,.2f}")
 
     else:
         st.warning("Please upload an Excel file with transactional or sales data. Your file has no numbers to calculate")

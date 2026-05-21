@@ -19,8 +19,9 @@ def dispatch_analytics_report(recipient_email, analytics_data):
     highest = analytics_data.get("highest_price", 0.0)
     lowest = analytics_data.get("lowest_price", 0.0)
     average = analytics_data.get("average_price", 0.0)
-    geometric_mean = analytics_data.get("geometric_mean", 0.0)
+    median = analytics_data.get("median", 0.0)
     std_dev = analytics_data.get("standard_deviation", 0.0)
+    transaction_count = analytics_data.get("transaction_count", 0.0)
 
     # Compile a metrics dashboard visualization layout directly inside the email body template
     html_content = f"""
@@ -47,11 +48,15 @@ def dispatch_analytics_report(recipient_email, analytics_data):
             </tr>
             <tr style="background-color: #f8fafc;">
                 <td style="padding: 12px; border: 1px solid #e2e8f0; font-weight: bold;">Geometric Mean:</td>
-                <td style="padding: 12px; border: 1px solid #e2e8f0; color: #10b981; font-weight: bold;">${geometric_mean:,.2f}</td>
+                <td style="padding: 12px; border: 1px solid #e2e8f0; color: #10b981; font-weight: bold;">${median:,.2f}</td>
             </tr>
             <tr>
                 <td style="padding: 12px; border: 1px solid #e2e8f0; font-weight: bold;">Standard Deviation Spread:</td>
                 <td style="padding: 12px; border: 1px solid #e2e8f0; color: #64748b;">{std_dev:,.2f}</td>
+            </tr>
+             <tr>
+                <td style="padding: 12px; border: 1px solid #e2e8f0; font-weight: bold;">Standard Deviation Spread:</td>
+                <td style="padding: 12px; border: 1px solid #e2e8f0; color: #64748b;">{transaction_count:,.2f}</td>
             </tr>
         </table>
 
