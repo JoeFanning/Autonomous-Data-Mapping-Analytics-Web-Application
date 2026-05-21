@@ -101,18 +101,30 @@ def target_price_column_only(numeric_columns):
     return None
 
 
-def process_analytics(df, column):
+def process_analytics(df: pd.DataFrame, column: str) -> dict:
     """Calculates granular pricing analytics data into a clean dictionary."""
+
+    # drops any non numeric cells in that 'price' column doesn't drop the whole row
     clean_series = df[column].dropna()
+
+    # acts as a safety guard clause to prevent your code from crashing when there is no data to analyze
     if clean_series.empty:
         return {
-            "highest_price": 0.0, "lowest_price": 0.0, "average_price": 0.0,
-            "standard_deviation": 0.0, "transaction_count": 0
+            "total_revenue": 0.0,
+            "highest_price": 0.0,
+            "lowest_price": 0.0,
+            "average_price": 0.0,
+            "geometric_mean": 0.0,
+            "standard_deviation": 0.0,
+            "transaction_count": 0
         }
+
     return {
+        "total_revenue": float(clean_series.sum()),
         "highest_price": float(clean_series.max()),
         "lowest_price": float(clean_series.min()),
         "average_price": float(clean_series.mean()),
+        "geometric_mean": float(np.exp(np.log(clean_series).mean())) if clean_series.min() > 0 else 0.0,
         "standard_deviation": float(clean_series.std()) if len(clean_series) > 1 else 0.0,
         "transaction_count": int(clean_series.count())
     }

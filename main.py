@@ -34,12 +34,6 @@ if uploaded_files:
         f.seek(0)
     # if not df.empty:: This acts as a safety guard. It ensures the DataFrame actually contains rows and columns before
     # trying to analyze it, preventing errors if the uploaded files were blank.
-    # if not df.empty:: This acts as a safety guard. It ensures the DataFrame actually contains rows and columns before
-    # trying to analyze it, preventing errors if the uploaded files were blank.
-    # if not df.empty:: This acts as a safety guard. It ensures the DataFrame actually contains rows and columns before
-    # trying to analyze it, preventing errors if the uploaded files were blank.
-    # if not df.empty:: This acts as a safety guard. It ensures the DataFrame actually contains rows and columns before
-    # trying to analyze it, preventing errors if the uploaded files were blank.
     if not df.empty:
         # df.select_dtypes(...): This is a pandas method that filters your DataFrame columns by their data types
         # include=["number"]: This targets all numeric columns, including integers (int64) and floats (float64).
