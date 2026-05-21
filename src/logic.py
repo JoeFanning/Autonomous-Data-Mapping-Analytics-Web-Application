@@ -148,6 +148,7 @@ def target_price_column_only(numeric_columns):
 
     non_price_keywords = [
         # Lowercase
+        "average",
         "unit price", "unit_price", "unit-price", "unitprice",
         "customer id", "customer_id", "customer-id", "customerid",
         "order id", "order_id", "order-id", "orderid",
@@ -155,6 +156,7 @@ def target_price_column_only(numeric_columns):
         "phone", "weight", "height", "width", "index", "serial", "age", "latitude", "longitude", "score",
 
         # UPPERCASE
+        "AVERAGE",
         "UNIT PRICE", "UNIT_PRICE", "UNIT-PRICE", "UNITPRICE",
         "CUSTOMER ID", "CUSTOMER_ID", "CUSTOMER-ID", "CUSTOMERID",
         "ORDER ID", "ORDER_ID", "ORDER-ID", "ORDERID",
@@ -162,6 +164,7 @@ def target_price_column_only(numeric_columns):
         "PHONE", "WEIGHT", "HEIGHT", "WIDTH", "INDEX", "SERIAL", "AGE", "LATITUDE", "LONGITUDE", "SCORE",
 
         # Title Case / CamelCase
+        "Average"
         "Unit Price", "Unit_Price", "Unit-Price", "UnitPrice", "Unitprice",
         "Customer Id", "Customer_Id", "Customer-Id", "CustomerId", "Customer_id",
         "Order Id", "Order_Id", "Order-Id", "OrderId", "Order_id",
