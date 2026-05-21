@@ -47,7 +47,7 @@ def dispatch_analytics_report(recipient_email, analytics_data):
                 <td style="padding: 12px; border: 1px solid #e2e8f0; font-weight: bold;">${average:,.2f}</td>
             </tr>
             <tr style="background-color: #f8fafc;">
-                <td style="padding: 12px; border: 1px solid #e2e8f0; font-weight: bold;">Geometric Mean:</td>
+                <td style="padding: 12px; border: 1px solid #e2e8f0; font-weight: bold;">Median:</td>
                 <td style="padding: 12px; border: 1px solid #e2e8f0; color: #10b981; font-weight: bold;">${median:,.2f}</td>
             </tr>
             <tr>
@@ -55,7 +55,7 @@ def dispatch_analytics_report(recipient_email, analytics_data):
                 <td style="padding: 12px; border: 1px solid #e2e8f0; color: #64748b;">{std_dev:,.2f}</td>
             </tr>
              <tr>
-                <td style="padding: 12px; border: 1px solid #e2e8f0; font-weight: bold;">Standard Deviation Spread:</td>
+                <td style="padding: 12px; border: 1px solid #e2e8f0; font-weight: bold;">Transaction Count:</td>
                 <td style="padding: 12px; border: 1px solid #e2e8f0; color: #64748b;">{transaction_count:,.2f}</td>
             </tr>
         </table>
