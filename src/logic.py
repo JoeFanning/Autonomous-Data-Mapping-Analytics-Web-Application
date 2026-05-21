@@ -114,7 +114,7 @@ def process_analytics(df: pd.DataFrame, column: str) -> dict:
             "highest_price": 0.0,
             "lowest_price": 0.0,
             "average_price": 0.0,
-            "geometric_mean": 0.0,
+            "median": 0.0,
             "standard_deviation": 0.0,
             "transaction_count": 0
         }
@@ -124,9 +124,10 @@ def process_analytics(df: pd.DataFrame, column: str) -> dict:
         "highest_price": float(clean_series.max()),
         "lowest_price": float(clean_series.min()),
         "average_price": float(clean_series.mean()),
-        "geometric_mean": float(np.exp(np.log(clean_series).mean())) if clean_series.min() > 0 else 0.0,
+        "median": float(clean_series.median()),
         "standard_deviation": float(clean_series.std()) if len(clean_series) > 1 else 0.0,
         "transaction_count": int(clean_series.count())
+
     }
 
 
