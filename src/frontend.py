@@ -55,7 +55,7 @@ def display_numeric_dashboard(metrics, selected_col):
         row2_col1.metric(label=f"Average Price ({selected_col})", value=f"${metrics['average_price']:,.2f}")
         row2_col2.metric(label="Standard Deviation", value=f"{metrics['standard_deviation']:,.2f}")
     else:
-        st.warning("The selected column contains no valid numeric data records.")
+        st.warning("Please upload an Excel file with transactional or sales data. Your file has no numbers to calculate")
 
 
 def display_empty_warning():
