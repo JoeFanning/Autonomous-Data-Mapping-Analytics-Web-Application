@@ -151,14 +151,32 @@ def target_price_column_only(numeric_columns):
         "Phone", "Weight", "Height", "Width", "Index", "Serial", "Age", "Latitude", "Longitude", "Score"
     ]
 
+    # Combine two lists together into one long list of text samples.
     X_train_text = price_keywords + non_price_keywords
+    # Creates the matching target labels. It assigns a 1 (Total Price) to every item from price_keywords,
+    # and a 0 (Not Total Price) to every item from non_price_keywords
     y_train = [1] * len(price_keywords) + [0] * len(non_price_keywords)
 
+    # Computers cannot read text strings, so CountVectorizer converts the words into a grid
+    # of numbers (vectors) based on word counts.
+    # Setting lowercase=False is critical here because it forces the vectorizer to preserve the
+    # distinct UPPERCASE, lowercase, and Title Case compound variations.
     vectorizer = CountVectorizer(lowercase=False)
     X_train_vectors = vectorizer.fit_transform(X_train_text)
 
+    # This initializes a Multinomial Naive Bayes classifier (clf) and trains it (.fit()).
+    # The model looks at the text structures and calculates the mathematical probability
+    # of which spelling patterns belong to a 1 versus a 0.
+    # # Multinomial #
+    # When you use MultinomialNB, the model tracks word frequencies. For example, if a spreadsheet
+    # column header is named Total_Price_Total, the model counts the word "Total" twice, increasing its prediction confidence.
     clf = MultinomialNB()
+    # X_train_vectors are the questions (the list of all words in both sets like 'Total Price' or 'User id").
+    # y_train are the correct answers (1 for 'Total Price', 0 for 'User id').
+    # .fit() is the learning process.
     clf.fit(X_train_vectors, y_train)
+
+    numeric_columns = list(numeric_columns)
 
     X_test_vectors = vectorizer.transform(numeric_columns)
     probabilities = clf.predict_proba(X_test_vectors)[:, 1]
