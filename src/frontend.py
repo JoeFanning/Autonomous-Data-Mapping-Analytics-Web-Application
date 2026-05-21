@@ -26,6 +26,15 @@ def render_base_uploader_ui():
     else:
         submit_clicked = False
 
+        # Footer text
+        st.markdown("---")  # Adds a clean divider line
+        st.markdown(
+            "<p style='text-align: center; color: gray; font-size: 0.8em;'>"
+            "🔒 Created by Joe Fanning May 2026. Visit [GitHub Repository](https://github.com/JoeFanning/"
+            "Autonomous-Data-Mapping-Analytics-Web-Application/blob/main/README.md to view the source code."
+            "</p>",
+            unsafe_allow_html=True)
+
     return uploaded_files, email, submit_button
 
 
