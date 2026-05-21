@@ -31,7 +31,7 @@ def render_base_uploader_ui():
         st.markdown(
             "<p style='text-align: center; color: gray; font-size: 1.0em;'>"
             "🔒 Created by Joe Fanning May 2026. Visit "
-            "<a href='https://github.com' target='_blank' style='color: #29b5e8; text-decoration: none;'>GitHub Repository</a> "
+            "<a href='https://github.com/JoeFanning/Autonomous-Data-Mapping-Analytics-Web-Application' target='_blank' style='color: #29b5e8; text-decoration: none;'>GitHub Repository</a> "
             "to view the source code."
             "</p>",
             unsafe_allow_html=True
