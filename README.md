@@ -5,7 +5,7 @@ An easy to use, interactive data analytics platform built with Streamlit. Upload
 
 ## 🧠 The Motivation: Exploring Data Drift
 
-"It is interesting how data changes over time and how software reacts to those unexpected changes. In the real world, data is rarely perfect or consistent; software must learn to adapt to these shifts rather than crashing. This curiosity is what led me to explore the concept of **Data Drift**."
+"I am interested in how data changes over time and how software reacts to those unexpected changes. In the real world, data is rarely perfect or consistent; software must learn to adapt to these shifts rather than crashing. This curiosity is what led me to explore the concept of **Data Drift**."
 
 ---
 
