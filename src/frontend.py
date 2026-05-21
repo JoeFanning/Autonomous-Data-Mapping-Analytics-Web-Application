@@ -19,7 +19,7 @@ def render_base_uploader_ui():
     if submit_button:
         if not email:
             # Stop everything immediately and alert the user right here
-            st.error("⚠️ Please provide aa valid email address before running the report.")
+            st.error("⚠️ Please provide a valid email address before running the report.")
             st.stop()
         else:
             submit_clicked = True
@@ -44,7 +44,7 @@ def display_numeric_dashboard(metrics, selected_col):
         st.info("No numeric columns found in this dataset.")
         return
 
-    st.subheader(f"📊 Analytics Summary for: {selected_col}")
+    st.subheader(f"📊 Analytics Summary for : ({selected_col})")
 
     if metrics["transaction_count"] > 0:
         row1_col1, row1_col2 = st.columns(2)

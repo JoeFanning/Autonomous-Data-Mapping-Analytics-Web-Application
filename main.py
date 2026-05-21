@@ -38,6 +38,8 @@ if uploaded_files:
     # trying to analyze it, preventing errors if the uploaded files were blank.
     # if not df.empty:: This acts as a safety guard. It ensures the DataFrame actually contains rows and columns before
     # trying to analyze it, preventing errors if the uploaded files were blank.
+    # if not df.empty:: This acts as a safety guard. It ensures the DataFrame actually contains rows and columns before
+    # trying to analyze it, preventing errors if the uploaded files were blank.
     if not df.empty:
         # df.select_dtypes(...): This is a pandas method that filters your DataFrame columns by their data types
         # include=["number"]: This targets all numeric columns, including integers (int64) and floats (float64).
@@ -52,21 +54,13 @@ if uploaded_files:
         # AUTOMATIC SELECTION: No tabs, dropdowns, or selection elements anywhere in the user interface
         # System automatically assigns values bypassing UI hooks entirely
         chosen_num = detected_price_col if detected_price_col in numeric_cols else (
-            numeric_cols[0] if numeric_cols else None)
-
-        # FIX: Explicitly extract the first string element from the text columns list instead of passing the whole list
-        chosen_text = text_cols[0] if text_cols else None
+            numeric_cols if numeric_cols else None)
+        chosen_text = text_cols if text_cols else None
 
         # Coordinate data operations based on user selection
         if chosen_num:
             calculated_metrics = logic.process_analytics(df, chosen_num)
             frontend.display_numeric_dashboard(calculated_metrics, chosen_num)
-
-        if chosen_text:
-            text_distribution_df = logic.calculate_text_distribution(df, chosen_text)
-            # FIX: Replaced missing frontend attribute with native Streamlit table display
-            st.write("### Text Column Distribution")
-            st.dataframe(text_distribution_df, use_container_width=True)
 
         # Trigger email automation routines when submit action requirements are confirmed
         if submit_clicked:
