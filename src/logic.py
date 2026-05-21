@@ -145,11 +145,18 @@ def target_price_column_only(numeric_columns):
 def process_analytics(df: pd.DataFrame, column: str) -> dict:
     """Calculates granular pricing analytics data into a clean dictionary."""
 
-    # 1. Clean the series by dropping NaNs and forcing everything to numbers
-    # Non-numeric text turns into NaN, then we drop all NaNs
+    # If 'column' was passed as a list (e.g., ['Total Price']), grab the first item string
+    if isinstance(column, list):
+        if len(column) > 0:
+            column = column[0]
+        else:
+            # Handle edge case where the list is completely empty
+            column = df.columns[0]
+
+    # Now df[column] is guaranteed to be a 1-D Series, preventing the TypeError
     numeric_series = pd.to_numeric(df[column], errors='coerce').dropna()
 
-    # 2. Guard clause: prevent crashes if there is no valid numeric data to analyze
+    # (Keep the rest of your guard clause and return block exactly the same)
     if numeric_series.empty:
         return {
             "total_revenue": 0.0,
@@ -161,7 +168,6 @@ def process_analytics(df: pd.DataFrame, column: str) -> dict:
             "transaction_count": 0
         }
 
-    # 3. Calculate metrics safely using the fully cleaned numeric series
     return {
         "total_revenue": float(numeric_series.sum()),
         "highest_price": float(numeric_series.max()),
