@@ -23,7 +23,7 @@ To tackle this problem, this software is a simple but effective solution to hand
 
 ### 🤖 Intelligent Column Detection via Naive Bayes
 
-Instead of relying on rigid, error-prone string matching or regular expressions, the engine utilizes a trained **Naive Bayes Machine Learning model** to prevent crashes caused by Schema Drift.
+Instead of relying on rigid, error-prone string matching or regular expressions, the engine utilizes a trained **Multinomial Naive Bayes Machine Learning model** to prevent crashes caused by Schema Drift.
 
 The text classification model processes incoming numeric column headers by analyzing character sequence probabilities against a multi-cased training vocabulary. This allows the system to accurately detect different column header names for 'Total Price', including different lexical variants such as lowercase (`total price`), UPPERCASE (`TOTAL PRICE`), Title Case (`Total Price`), compound words (TotalPrice), snake_case (total_price) and many other variants. This ensures robust performance even with unexpected spreadsheet variations. This program is currently only adapted to the english language.
  
