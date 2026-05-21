@@ -16,6 +16,15 @@ def render_base_uploader_ui():
 
     email = st.text_input("📬 Enter your email address:", placeholder="joespirial@hotmail.com")
     submit_button = st.button("🚀 Run Analytics & Email Report")
+    if submit_button:
+        if not email:
+            # Stop everything immediately and alert the user right here
+            st.error("⚠️ Please provide a valid email address before running the report.")
+            st.stop()
+        else:
+            submit_clicked = True
+    else:
+        submit_clicked = False
 
     return uploaded_files, email, submit_button
 
