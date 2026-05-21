@@ -188,13 +188,7 @@ def target_price_column_only(numeric_columns):
     # This initializes a Multinomial Naive Bayes classifier (clf) and trains it (.fit()).
     # The model looks at the text structures and calculates the mathematical probability
     # of which spelling patterns belong to a 1 versus a 0.
-    # # Multinomial #
-    # When you use MultinomialNB, the model tracks word frequencies. For example, if a spreadsheet
-    # column header is named Total_Price_Total, the model counts the word "Total" twice, increasing its prediction confidence.
     clf = MultinomialNB()
-    # X_train_vectors are the questions (the list of all words in both sets like 'Total Price' or 'User id").
-    # y_train are the correct answers (1 for 'Total Price', 0 for 'User id').
-    # .fit() is the learning process.
     clf.fit(X_train_vectors, y_train)
 
     numeric_columns = list(numeric_columns)
@@ -202,10 +196,28 @@ def target_price_column_only(numeric_columns):
     X_test_vectors = vectorizer.transform(numeric_columns)
     probabilities = clf.predict_proba(X_test_vectors)[:, 1]
 
-    best_match_idx = np.argmax(probabilities)
-    if probabilities[best_match_idx] > 0.5:
-        return numeric_columns[best_match_idx]
-    return None
+    # Instead of picking the highest number blindly, track a real high-confidence winner
+    best_column = None
+    highest_valid_prob = 0.0
+
+    # Strict threshold: A column MUST score above 80% confidence based on good words to qualify
+    strict_threshold = 0.80
+
+    for idx, col_name in enumerate(numeric_columns):
+        prob = probabilities[idx]
+        col_clean = col_name.lower()
+
+        # HARD SHIELD: Absolute veto for words that should NEVER be considered a Total Price
+        if "average" in col_clean or "avg" in col_clean or "median" in col_clean:
+            continue
+
+        # Check if the column is independently confident and beats any previous valid candidates
+        if prob > strict_threshold and prob > highest_valid_prob:
+            highest_valid_prob = prob
+            best_column = col_name
+
+    # Returns the actual string header name if found, otherwise returns None safely
+    return best_column
 
 
 def process_analytics(df: pd.DataFrame, column: str) -> dict:
