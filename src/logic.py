@@ -69,14 +69,17 @@ def target_price_column_only(numeric_columns):
     ]
 
     non_price_keywords = [
+        "unit price", "unitprice",
         "id", "customer_id", "order_id", "quantity", "qty", "count", "amount",
         "year", "month", "day", "date", "zip", "phone", "weight", "height",
         "width", "index", "serial", "age", "latitude", "longitude", "score",
 
+        "UNIT PRICE", "UNITPRICE",
         "ID", "CUSTOMER_ID", "ORDER_ID", "QUANTITY", "QTY", "COUNT", "AMOUNT",
         "YEAR", "MONTH", "DAY", "DATE", "ZIP", "PHONE", "WEIGHT", "HEIGHT",
         "WIDTH", "INDEX", "SERIAL", "AGE", "LATITUDE", "LONGITUDE", "SCORE",
 
+        "UnitPrice", "Unitprice",
         "Id", "Customer_id", "Order_id", "Quantity", "Qty", "Count", "Amount",
         "Year", "Month", "Day", "Date", "Zip", "Phone", "Weight", "Height",
         "Width", "Index", "Serial", "Age", "Latitude", "Longitude", "Score"
