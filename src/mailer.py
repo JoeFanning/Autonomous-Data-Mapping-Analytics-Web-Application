@@ -15,9 +15,11 @@ def dispatch_analytics_report(recipient_email, analytics_data):
 
     # 2. Extract metrics safely out of the data packet dict sent by main.py
     # Provide zero fallbacks if the file did not contain numeric information
+    total_revenue = analytics_data.get("total_revenue", 0.0)
     highest = analytics_data.get("highest_price", 0.0)
     lowest = analytics_data.get("lowest_price", 0.0)
     average = analytics_data.get("average_price", 0.0)
+    geometric_mean = analytics_data.get("geometric_mean", 0.0)
     std_dev = analytics_data.get("standard_deviation", 0.0)
 
     # Compile a metrics dashboard visualization layout directly inside the email body template
@@ -27,6 +29,10 @@ def dispatch_analytics_report(recipient_email, analytics_data):
         <p>Your requested machine learning data analytics pipeline summary is complete.</p>
 
         <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+        <tr style="background-color: #f8fafc;">
+                <td style="padding: 12px; border: 1px solid #e2e8f0; font-weight: bold;">Highest Value Found:</td>
+                <td style="padding: 12px; border: 1px solid #e2e8f0; color: #10b981; font-weight: bold;">${total_revenue:,.2f}</td>
+            </tr>
             <tr style="background-color: #f8fafc;">
                 <td style="padding: 12px; border: 1px solid #e2e8f0; font-weight: bold;">Highest Value Found:</td>
                 <td style="padding: 12px; border: 1px solid #e2e8f0; color: #10b981; font-weight: bold;">${highest:,.2f}</td>
@@ -38,6 +44,10 @@ def dispatch_analytics_report(recipient_email, analytics_data):
             <tr style="background-color: #f8fafc;">
                 <td style="padding: 12px; border: 1px solid #e2e8f0; font-weight: bold;">Average Value (Mean):</td>
                 <td style="padding: 12px; border: 1px solid #e2e8f0; font-weight: bold;">${average:,.2f}</td>
+            </tr>
+            <tr style="background-color: #f8fafc;">
+                <td style="padding: 12px; border: 1px solid #e2e8f0; font-weight: bold;">Highest Value Found:</td>
+                <td style="padding: 12px; border: 1px solid #e2e8f0; color: #10b981; font-weight: bold;">${geometric_mean:,.2f}</td>
             </tr>
             <tr>
                 <td style="padding: 12px; border: 1px solid #e2e8f0; font-weight: bold;">Standard Deviation Spread:</td>
