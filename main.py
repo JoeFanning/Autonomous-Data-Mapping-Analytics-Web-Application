@@ -36,18 +36,26 @@ if uploaded_files:
     # trying to analyze it, preventing errors if the uploaded files were blank.
     # if not df.empty:: This acts as a safety guard. It ensures the DataFrame actually contains rows and columns before
     # trying to analyze it, preventing errors if the uploaded files were blank.
+    # if not df.empty:: This acts as a safety guard. It ensures the DataFrame actually contains rows and columns before
+    # trying to analyze it, preventing errors if the uploaded files were blank.
     if not df.empty:
         # df.select_dtypes(...): This is a pandas method that filters your DataFrame columns by their data types
+        # include=["number"]: This targets all numeric columns, including integers (int64) and floats (float64).
         numeric_cols = df.select_dtypes(include=["number"]).columns.tolist()
+        # include=["object", "category"]: This targets text columns (strings are stored as object in pandas) and categorical columns.
+        # .columns.tolist(): This extracts just the names of those filtered columns and converts them into a clean Python list.
         text_cols = df.select_dtypes(include=["object", "category"]).columns.tolist()
 
         # Route numeric attributes downstream into backend ML Naive Bayes classifier
         detected_price_col = logic.target_price_column_only(numeric_cols)
 
         # AUTOMATIC SELECTION: No tabs, dropdowns, or selection elements anywhere in the user interface
+        # System automatically assigns values bypassing UI hooks entirely
         chosen_num = detected_price_col if detected_price_col in numeric_cols else (
-            numeric_cols if numeric_cols else None)
-        chosen_text = text_cols if text_cols else None
+            numeric_cols[0] if numeric_cols else None)
+
+        # FIX: Explicitly extract the first string element from the text columns list instead of passing the whole list
+        chosen_text = text_cols[0] if text_cols else None
 
         # Coordinate data operations based on user selection
         if chosen_num:
@@ -56,38 +64,32 @@ if uploaded_files:
 
         if chosen_text:
             text_distribution_df = logic.calculate_text_distribution(df, chosen_text)
+            # FIX: Replaced missing frontend attribute with native Streamlit table display
             st.write("### Text Column Distribution")
             st.dataframe(text_distribution_df, use_container_width=True)
 
-        # --- DEBUG AREA: Let's track if variables are surviving the button click ---
-        # st.write(f"Debug - Submit status: {submit_clicked}, Email entered: '{user_email}'")
-
         # Trigger email automation routines when submit action requirements are confirmed
-            # Trigger email automation routines when submit action requirements are confirmed
-            if submit_clicked:
-                if not user_email:
-                    st.toast("⚠️ Please provide an email address before running the report.", icon="⚠️")
+        if submit_clicked:
+            if not user_email:
+                st.toast("⚠️ Please provide an email address before running the report.", icon="⚠️")
+            else:
+                # Consolidate latest calculations state packet values safely
+                fallback_col = chosen_num if chosen_num else (numeric_cols if numeric_cols else None)
+
+                if fallback_col:
+                    st.toast("🔄 Processing final analytics and contacting Resend servers...", icon="🔄")
+                    try:
+                        final_report_data = logic.process_analytics(df, fallback_col)
+                        mailer.dispatch_analytics_report(user_email, final_report_data)
+
+                        st.toast("📬 Analytics report successfully dispatched!", icon="📬")
+                        st.write(f"### 🎉 Success! Report sent to **{user_email}**")
+
+                    except Exception as e:
+                        st.toast(f"❌ Mailer execution failed: {e}", icon="❌")
+                        st.error(f"❌ Detailed Mailer Crash Log: {e}")
                 else:
-                    # Consolidate latest calculations state packet values safely
-                    fallback_col = chosen_num if chosen_num else (numeric_cols if numeric_cols else None)
+                    st.toast("❌ No valid numeric column found to calculate metrics.", icon="❌")
 
-                    if fallback_col:
-                        # st.toast creates a floating popup notification in the lower right corner instantly
-                        st.toast("🔄 Processing final analytics and contacting Resend servers...", icon="🔄")
-                        try:
-                            final_report_data = logic.process_analytics(df, fallback_col)
-                            mailer.dispatch_analytics_report(user_email, final_report_data)
-
-                            # Use toast + an explicit main page success header so the user can definitely see it
-                            st.toast("📬 Analytics report successfully dispatched!", icon="📬")
-                            st.write(f"### 🎉 Success! Report sent to **{user_email}**")
-
-                        except Exception as e:
-                            st.toast(f"❌ Mailer execution failed: {e}", icon="❌")
-                            st.error(f"❌ Detailed Mailer Crash Log: {e}")
-                    else:
-                        st.toast("❌ No valid numeric column found to calculate metrics.", icon="❌")
-
-        else:
-            frontend.display_empty_warning()
-
+    else:
+        frontend.display_empty_warning()
