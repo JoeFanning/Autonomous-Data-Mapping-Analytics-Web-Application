@@ -50,7 +50,7 @@ def display_numeric_dashboard(metrics, selected_col):
         row1_col1, row1_col2 = st.columns(2)
         row2_col1, row2_col2 = st.columns(2)
         row3_col1, row3_col2 = st.columns(2)
-        row4_col1 = st.columns(1)
+        row4_col1, = st.columns(1)
 
         row1_col1.metric(label=f"Total Revenue ({selected_col})", value=f"${metrics['total_revenue']:,.2f}")
         row1_col2.metric(label=f"Highest Price ({selected_col})", value=f"${metrics['highest_price']:,.2f}")
