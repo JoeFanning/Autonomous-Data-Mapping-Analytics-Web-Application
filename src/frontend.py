@@ -14,8 +14,9 @@ def render_base_uploader_ui():
         accept_multiple_files=True
     )
 
-    email = st.text_input("📬 Enter your email address:", placeholder="your-email@example.com")
+    email = st.text_input("📬 Enter your email address:", placeholder="joespirial@hotmail.com")
     submit_button = st.button("🚀 Run Analytics & Email Report")
+
     return uploaded_files, email, submit_button
 
 
