@@ -58,7 +58,8 @@ def display_numeric_dashboard(metrics, selected_col):
         row2_col2.metric(label=f"Average Price ({selected_col})", value=f"${metrics['average_price']:,.2f}")
         row3_col1.metric(label=f"Median ({selected_col})", value=f"${metrics['median']:,.2f}")
         row3_col2.metric(label="Standard Deviation", value=f"{metrics['standard_deviation']:,.2f}")
-        row4_col1.metric(label="Transaction Count", value=f"{metrics['transaction_count']:,.2f}")
+        row4_col1.metric(label="Transaction Count", value=f"{metrics['transaction_count']:,}")
+
 
     else:
         st.warning("Please upload an Excel file with transactional or sales data. Your file has no numbers to calculate")
