@@ -83,7 +83,7 @@ if uploaded_files:
                         st.toast(f"❌ Mailer execution failed: {e}", icon="❌")
                         st.error(f"❌ Detailed Mailer Crash Log: {e}")
                 else:
-                    st.toast("❌ No valid numeric column found to calculate metrics.", icon="❌")
+                    st.toast("Please upload an Excel file with transactional or sales data. Your file has no numbers to calculate.", icon="❌")
 
     else:
         frontend.display_empty_warning()
