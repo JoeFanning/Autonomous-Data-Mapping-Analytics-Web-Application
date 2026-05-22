@@ -172,8 +172,6 @@ def target_price_column_only(numeric_columns):
         "Phone", "Weight", "Height", "Width", "Index", "Serial", "Age", "Latitude", "Longitude", "Score"
     ]
 
-    import numpy as np
-
     # Combine two lists together into one long list of text samples.
     X_train_text = price_keywords + non_price_keywords
     # Creates the matching target labels. It assigns a 1 (Total Price) to every item from price_keywords,
@@ -190,46 +188,41 @@ def target_price_column_only(numeric_columns):
 
     numeric_columns = list(numeric_columns)
 
-    # Calculate probabilities for ALL numeric columns
+    # 1. Calculate probabilities for ALL numeric columns at once
     X_test_vectors = vectorizer.transform(numeric_columns)
     probabilities = clf.predict_proba(X_test_vectors)[:, 1]
 
-    # --- NEW LOGIC: FIND AND CHOOSE ONLY THE SINGLE BEST WINNER ---
-    if len(numeric_columns) > 0:
-        # 1. Find the index position of the highest probability value
-        best_index = np.argmax(probabilities)
-
-        # 2. Extract that single column name and its matching score
-        best_column = numeric_columns[best_index]
-        best_score = probabilities[best_index]
-
-        print(
-            f"Evaluated {len(numeric_columns)} columns. The single best winner is: '{best_column}' with a confidence score of {best_score:.2%}")
-    else:
-        best_column = None
-        print("No numeric columns provided to test.")
-
-    # Instead of picking the highest number blindly, track a real high-confidence winner
+    # Initialize your output variable cleanly
     best_column = None
-    highest_valid_prob = 0.0
-
-    # Strict threshold: A column MUST score above 80% confidence based on good words to qualify
     strict_threshold = 0.80
 
-    for idx, col_name in enumerate(numeric_columns):
-        prob = probabilities[idx]
-        col_clean = col_name.lower()
+    # 2. Extract ONLY the single absolute best candidate
+    if len(numeric_columns) > 0:
+        # Find the index position of the highest probability value
+        best_index = np.argmax(probabilities)
 
-        # HARD SHIELD: Absolute veto for words that should NEVER be considered a Total Price
+        # Grab that candidate and its score
+        candidate_column = numeric_columns[best_index]
+        candidate_score = probabilities[best_index]
+
+        col_clean = candidate_column.lower()
+
+        # 3. Apply your HARD SHIELD veto to the winner
         if "average" in col_clean or "avg" in col_clean or "median" in col_clean:
-            continue
+            print(f"Best column '{candidate_column}' was vetoed by the hard shield.")
+            best_column = None
 
-        # Check if the column is independently confident and beats any previous valid candidates
-        if prob > strict_threshold and prob > highest_valid_prob:
-            highest_valid_prob = prob
-            best_column = col_name
+        # 4. Apply your strict 80% threshold to the winner
+        elif candidate_score > strict_threshold:
+            best_column = candidate_column
+            print(f"Successfully selected single best winner: '{best_column}' ({candidate_score:.2%} confidence)")
+        else:
+            print(
+                f"Best column '{candidate_column}' dropped because score ({candidate_score:.2%}) was below threshold.")
+    else:
+        print("No numeric columns provided to test.")
 
-    # Returns the actual string header name if found, otherwise returns None safely
+    # 5. Returns exactly one string header name, or None safely. No leaks!
     return best_column
 
 
