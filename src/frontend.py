@@ -55,7 +55,18 @@ def display_numeric_dashboard(metrics, selected_col):
         st.info("No numeric columns found in this dataset.")
         return
 
-    st.subheader(f"📊 Analytics Summary for : ({selected_col})")
+    # --- FIX: Extract the single column string if a list or tuple was passed ---
+    if isinstance(selected_col, (list, tuple)):
+        # If it's a list containing a list (nested), grab the deep inner value
+        if len(selected_col) > 0 and isinstance(selected_col[0], (list, tuple)):
+            display_name = selected_col[0][0] if len(selected_col[0]) > 0 else "Unknown"
+        else:
+            display_name = selected_col[0] if len(selected_col) > 0 else "Unknown"
+    else:
+        display_name = selected_col
+
+    # Clean display output using a single string name without parenthetical wrappers
+    st.subheader(f"📊 Analytics Summary for : {display_name}")
 
     if metrics["transaction_count"] > 0:
         row1_col1, row1_col2 = st.columns(2)
@@ -63,18 +74,17 @@ def display_numeric_dashboard(metrics, selected_col):
         row3_col1, row3_col2 = st.columns(2)
         row4_col1, = st.columns(1)
 
-        row1_col1.metric(label=f"Total Revenue ({selected_col})", value=f"${metrics['total_revenue']:,.2f}")
-        row1_col2.metric(label=f"Highest Price ({selected_col})", value=f"${metrics['highest_price']:,.2f}")
-        row2_col1.metric(label=f"Lowest Price ({selected_col})", value=f"${metrics['lowest_price']:,.2f}")
-        row2_col2.metric(label=f"Average Price ({selected_col})", value=f"${metrics['average_price']:,.2f}")
-        row3_col1.metric(label=f"Median ({selected_col})", value=f"${metrics['median']:,.2f}")
+        # Uses the clean 'display_name' variable for clean text labels
+        row1_col1.metric(label=f"Total Revenue ({display_name})", value=f"${metrics['total_revenue']:,.2f}")
+        row1_col2.metric(label=f"Highest Price ({display_name})", value=f"${metrics['highest_price']:,.2f}")
+        row2_col1.metric(label=f"Lowest Price ({display_name})", value=f"${metrics['lowest_price']:,.2f}")
+        row2_col2.metric(label=f"Average Price ({display_name})", value=f"${metrics['average_price']:,.2f}")
+        row3_col1.metric(label=f"Median ({display_name})", value=f"${metrics['median']:,.2f}")
         row3_col2.metric(label="Standard Deviation", value=f"{metrics['standard_deviation']:,.2f}")
         row4_col1.metric(label="Transaction Count", value=f"{metrics['transaction_count']:,}")
 
-
     else:
         st.warning("Please upload an Excel file with transactional or sales data. Your file has no numbers to calculate")
-
 
 def display_empty_warning():
     st.warning("Uploaded files do not contain usable data layouts.")
