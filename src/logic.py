@@ -178,21 +178,21 @@ def target_price_column_only(numeric_columns):
     # and a 0 (Not Total Price) to every item from non_price_keywords
     y_train = [1] * len(price_keywords) + [0] * len(non_price_keywords)
 
-    # Computers cannot read text strings, so CountVectorizer converts the words into a grid
-    # of numbers (vectors) based on word counts.
-    # Setting lowercase=False is critical here because it forces the vectorizer to preserve the
-    # distinct UPPERCASE, lowercase, and Title Case compound variations.
-    vectorizer = CountVectorizer(lowercase=False)
+    # We use character slicing instead of whole words.
+    # It chops everything into overlapping blocks of 2, 3, and 4 characters.
+    # lowercase=False still preserves distinct UPPERCASE/lowercase structural variations.
+    vectorizer = CountVectorizer(analyzer='char', ngram_range=(2, 4), lowercase=False)
     X_train_vectors = vectorizer.fit_transform(X_train_text)
 
     # This initializes a Multinomial Naive Bayes classifier (clf) and trains it (.fit()).
-    # The model looks at the text structures and calculates the mathematical probability
-    # of which spelling patterns belong to a 1 versus a 0.
+    # The model looks at the slice frequencies and calculates the mathematical probability
+    # of which character patterns belong to a 1 versus a 0.
     clf = MultinomialNB()
     clf.fit(X_train_vectors, y_train)
 
     numeric_columns = list(numeric_columns)
 
+    # The test columns are now transformed into the exact same character slices
     X_test_vectors = vectorizer.transform(numeric_columns)
     probabilities = clf.predict_proba(X_test_vectors)[:, 1]
 
