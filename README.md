@@ -27,13 +27,13 @@ Instead of relying on rigid, error-prone string matching or regular expressions,
 
 The text classification model processes incoming numeric column headers by analyzing character sequence probabilities against a multi-cased training vocabulary. This allows the system to accurately detect different column header names for 'Total Price', including different lexical variants such as lowercase (`total price`), UPPERCASE (`TOTAL PRICE`), Title Case (`Total Price`), compound words (TotalPrice), snake_case (total_price) and many other variants. This ensures robust performance even with unexpected spreadsheet variations. This program is currently only adapted to the english language.
  
-=======
+---
 
 ### 🔮 The Ultimate Goal: Total Autonomous Data Mapping
 
 Looking ahead, the ultimate achievement for an engineering pipeline like this would be expanding autonomous classification to the entire dataset. Instead of just targeting a single price field, a mature system would evaluate every text and numeric column simultaneously—instantly identifying exactly *what* the column represents, classifying the specific type of data it holds, and dynamically applying the correct analytical process without any human intervention.
 
-
+---
 
 ## 🚀 Live Application
 You can access and interact with the live software directly in your web browser:
