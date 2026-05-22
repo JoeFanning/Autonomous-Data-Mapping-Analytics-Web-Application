@@ -66,7 +66,7 @@ def display_numeric_dashboard(metrics, selected_col):
         display_name = selected_col
 
     # Clean display output using a single string name without parenthetical wrappers
-    st.subheader(f"📊 Analytics Summary for : {display_name}")
+    st.subheader(f"📊 Analytics Summary for : ({display_name})")
 
     if metrics["transaction_count"] > 0:
         row1_col1, row1_col2 = st.columns(2)
