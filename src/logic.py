@@ -186,9 +186,12 @@ def target_price_column_only(numeric_columns):
     clf = MultinomialNB()
     clf.fit(X_train_vectors, y_train)
 
+    # --- FIX 1: UNWRAP THE LIST IMMEDIATELY HERE ---
     numeric_columns = list(numeric_columns)
+    if len(numeric_columns) == 1 and isinstance(numeric_columns[0], (list, tuple)):
+        numeric_columns = list(numeric_columns[0])
 
-    # 1. Calculate probabilities for ALL numeric columns at once
+    # 1. Calculate probabilities for ALL numeric columns at once (now beautifully flattened)
     X_test_vectors = vectorizer.transform(numeric_columns)
     probabilities = clf.predict_proba(X_test_vectors)[:, 1]
 
