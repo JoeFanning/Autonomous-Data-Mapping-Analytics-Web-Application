@@ -172,29 +172,42 @@ def target_price_column_only(numeric_columns):
         "Phone", "Weight", "Height", "Width", "Index", "Serial", "Age", "Latitude", "Longitude", "Score"
     ]
 
+    import numpy as np
+
     # Combine two lists together into one long list of text samples.
     X_train_text = price_keywords + non_price_keywords
     # Creates the matching target labels. It assigns a 1 (Total Price) to every item from price_keywords,
     # and a 0 (Not Total Price) to every item from non_price_keywords
     y_train = [1] * len(price_keywords) + [0] * len(non_price_keywords)
 
-    # We use character slicing instead of whole words.
-    # It chops everything into overlapping blocks of 2, 3, and 4 characters.
-    # lowercase=False still preserves distinct UPPERCASE/lowercase structural variations.
+    # Use character slicing instead of whole words.
     vectorizer = CountVectorizer(analyzer='char', ngram_range=(2, 4), lowercase=False)
     X_train_vectors = vectorizer.fit_transform(X_train_text)
 
     # This initializes a Multinomial Naive Bayes classifier (clf) and trains it (.fit()).
-    # The model looks at the slice frequencies and calculates the mathematical probability
-    # of which character patterns belong to a 1 versus a 0.
     clf = MultinomialNB()
     clf.fit(X_train_vectors, y_train)
 
     numeric_columns = list(numeric_columns)
 
-    # The test columns are now transformed into the exact same character slices
+    # Calculate probabilities for ALL numeric columns
     X_test_vectors = vectorizer.transform(numeric_columns)
     probabilities = clf.predict_proba(X_test_vectors)[:, 1]
+
+    # --- NEW LOGIC: FIND AND CHOOSE ONLY THE SINGLE BEST WINNER ---
+    if len(numeric_columns) > 0:
+        # 1. Find the index position of the highest probability value
+        best_index = np.argmax(probabilities)
+
+        # 2. Extract that single column name and its matching score
+        best_column = numeric_columns[best_index]
+        best_score = probabilities[best_index]
+
+        print(
+            f"Evaluated {len(numeric_columns)} columns. The single best winner is: '{best_column}' with a confidence score of {best_score:.2%}")
+    else:
+        best_column = None
+        print("No numeric columns provided to test.")
 
     # Instead of picking the highest number blindly, track a real high-confidence winner
     best_column = None
