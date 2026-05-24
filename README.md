@@ -26,6 +26,7 @@ To tackle this problem, this software is a simple but effective solution to hand
 * **Context-Aware:** Understands the actual meaning of column headers rather than relying on rigid keyword matching.
 * **Fuzzy & Multi-lingual Support:** Automatically handles variations in spelling, shorthand (e.g., `Amt`, `Prc`), snake_case, camelCase, and multiple languages (such as Spanish, French, and German).
 * **Zero Training Required:** Works entirely local and out-of-the-box using pre-trained sentence embeddings.
+* Pre-trained sentence embeddings are whole sentences converted into a list of mathematical numbers (called a vector) that capture the exact meaning of the text.
  
 ---
 
