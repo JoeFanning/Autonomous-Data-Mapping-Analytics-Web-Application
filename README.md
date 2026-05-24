@@ -21,7 +21,7 @@ For example, if a traditional program expects an Excel column to be named exactl
 
 To tackle this problem, this software is a simple but effective solution to handle shifting column names automatically.
 
-### 🤖 Intelligent Column Detection with a Deep Learning Transformer model
+### 🤖 Intelligent Column Detection with a Deep Learning Transformer Model
 * **Powered by AI:** Uses the `all-MiniLM-L6-v2` Deep Learning Transformer model to dynamically map and identify the 'Total Price or 'Total Amount Due' column in the data Schema. It is a mini Neural Network (a MiniLM Transformer) trained on over one billion sentences.
 * **Context-Aware:** Understands the actual meaning of column headers rather than relying on rigid keyword matching.
 * **Fuzzy & Multi-lingual Support:** Automatically handles variations in spelling, shorthand (e.g., `Amt`, `Prc`), snake_case, camelCase, and multiple languages (such as Spanish, French, and German).
