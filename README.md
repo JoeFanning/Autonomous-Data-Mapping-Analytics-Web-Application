@@ -21,11 +21,11 @@ For example, if a traditional program expects an Excel column to be named exactl
 
 To tackle this problem, this software is a simple but effective solution to handle shifting column names automatically.
 
-### 🤖 Intelligent Column Detection via Naive Bayes
-
-Instead of relying on rigid, error-prone string matching or regular expressions, the engine utilizes a trained **Multinomial Naive Bayes Machine Learning model** to prevent crashes caused by Schema Drift.
-
-The text classification model processes incoming numeric column headers by analyzing character sequence probabilities against a multi-cased training vocabulary. This allows the system to accurately detect different column header names for 'Total Price', including different lexical variants such as lowercase (`total price`), UPPERCASE (`TOTAL PRICE`), Title Case (`Total Price`), compound words (TotalPrice), snake_case (total_price) and many other variants. This ensures robust performance even with unexpected spreadsheet variations. This program is currently only adapted to the english language.
+### 🤖 Intelligent Column Detection with a Deep Learning Transformer model
+* **Powered by AI:** Uses the `all-MiniLM-L6-v2` Deep Learning Transformer model to dynamically map and identify the 'Total Price or 'Total Amount Due' column in the data Schema. It is a mini Neural Network (a MiniLM Transformer) trained on over one billion sentences.
+* **Context-Aware:** Understands the actual meaning of column headers rather than relying on rigid keyword matching.
+* **Fuzzy & Multi-lingual Support:** Automatically handles variations in spelling, shorthand (e.g., `Amt`, `Prc`), snake_case, camelCase, and multiple languages (such as Spanish, French, and German).
+* **Zero Training Required:** Works entirely local and out-of-the-box using pre-trained sentence embeddings.
  
 ---
 
