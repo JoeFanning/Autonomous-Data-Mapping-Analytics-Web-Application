@@ -1,7 +1,7 @@
 # 🌐 Autonomous Data Mapping & Analytics Web Application
 
 
-An easy to use, interactive data analytics platform built with Streamlit. Upload your business spreadsheets, instantly preview key financial metrics, and automatically dispatch summary reports to your email.
+An easy to use, interactive data analytics platform built with Streamlit and a Deep Learning Transformer Model. Upload your business spreadsheets, instantly preview key financial metrics, and automatically dispatch summary reports to your email.
 
 ## 🧠 The Motivation: Exploring Data Drift
 
