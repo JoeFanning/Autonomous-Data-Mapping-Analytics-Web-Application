@@ -6,3 +6,4 @@ matplotlib
 dotenv
 scikit-learn
 numpy
+sentence-transformers
