@@ -38,10 +38,18 @@ def target_price_column_only(numeric_columns):
         return None
 
     # Core anchor concepts used to measure semantic overlap
+    # The all-MiniLM-L6-v2 transformer model understands word roots natively. It automatically treats
+    # patterns like "gross_total", "GrossTotal", and "gross total" as the exact same semantic concept
     reference_concepts = [
         "total price", "line total", "extended price", "total amount",
         "grand total", "total cost", "final price", "invoice total",
-        "net total", "gross total", "total due", "amount due", "subtotal"
+        "net total", "gross total", "total due", "amount due", "final total",
+        "Gross Amount", "Gross Total", "Net Amount", "Net Total", "Grand Total",
+        "Line Total", "Row Total", "Extended Price", "Ext Price", "Amount Due",
+        "Total Due", "Invoice Total", "Order Total", "Charge Total", "Total Charges",
+        "Balance Due", "Settlement Amount", "Total Revenue", "Total Value", "Aggregate Amount",
+        "Total Payout", "Gross Proceeds",
+
     ]
 
     # Initialize the lightweight semantic embedding model
